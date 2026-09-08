@@ -26,17 +26,54 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Mirror working Netlify deploy
+      - name: Rebuild verified v12
         run: |
-          mkdir -p _site
-          cd _site
-          wget --mirror --convert-links --adjust-extension --page-requisites --no-parent \
-            --directory-prefix=. \
-            https://6a9e48175056d37da36b8611--alex-math-text-problems.netlify.app/
-          cp -a 6a9e48175056d37da36b8611--alex-math-text-problems.netlify.app/. .
-          rm -rf 6a9e48175056d37da36b8611--alex-math-text-problems.netlify.app
-          touch .nojekyll
-          test -f index.html
+          cat \
+            bundle/part00.txt \
+            bundle/part01.txt \
+            bundle/part02.txt \
+            bundle/part03.txt \
+            bundle/part04.txt \
+            bundle/part05.txt \
+            bundle/part06.txt \
+            bundle2/part07.txt \
+            bundle/part09_10.txt \
+            bundlefix/c00.txt \
+            bundlefix/c01.txt \
+            bundlefix/c02.txt \
+            bundlefix/c03.txt \
+            bundlefix/c04.txt \
+            bundlefix/c05.txt \
+            bundlefix/c06.txt \
+            bundlefix/c07.txt \
+            bundlefix/c08.txt \
+            bundlefix/c09.txt \
+            bundlefix/c10.txt \
+            bundlefix/c11.txt \
+            bundlefix/c12.txt \
+            bundlefix/c13.txt \
+            bundlefix/c14.txt \
+            bundlefix/c15.txt \
+            bundle/part15_16.txt \
+            bundle/part17.txt \
+            > /tmp/v12.b64
+
+          test "$(wc -c < /tmp/v12.b64)" -eq 137432
+          base64 -d /tmp/v12.b64 > /tmp/v12.zip
+          test "$(git hash-object /tmp/v12.zip)" = "e20572ce25eda505c6d26b9904300b6da8ac1e8b"
+          unzip -tq /tmp/v12.zip
+
+          mkdir -p /tmp/unpack _site
+          unzip -q /tmp/v12.zip -d /tmp/unpack
+          cp -a /tmp/unpack/text-problems-platform-full-v12/. _site/
+          touch _site/.nojekyll
+          test -f _site/index.html
+          test -f _site/modules/movement/index.html
+          test -f _site/modules/work/index.html
+          test -f _site/modules/percent/index.html
+          test -f _site/modules/mixtures/index.html
+          test -f _site/modules/alloys/index.html
+          test -f _site/shared/lesson-tools.js
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
