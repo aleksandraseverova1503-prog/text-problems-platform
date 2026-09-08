@@ -1,0 +1,66 @@
+.lesson-share-tools{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+  margin:18px 0 0;
+  padding:14px 16px;
+  background:#fff;
+  border:1px solid #d8e5f1;
+  border-radius:18px;
+  box-shadow:0 10px 26px rgba(76,105,141,.07);
+}
+.lesson-share-tools .share-tools-title{
+  margin-right:auto;
+  color:#17365d;
+  font-size:14px;
+  font-weight:850;
+}
+.lesson-share-btn{
+  appearance:none;
+  border:1px solid #ccdae8;
+  background:#fff;
+  color:#17365d;
+  border-radius:12px;
+  min-height:42px;
+  padding:9px 13px;
+  font:inherit;
+  font-size:14px;
+  font-weight:800;
+  cursor:pointer;
+  transition:border-color .15s ease,background .15s ease,transform .15s ease;
+}
+.lesson-share-btn:hover{border-color:#8fb1d1;background:#f7fbff;transform:translateY(-1px)}
+.lesson-share-btn.primary{background:#eaf3ff;border-color:#bdd3ea;color:#3374bd}
+.lesson-share-btn.success{background:#edf7f0;border-color:#c8e1d0;color:#4c8261}
+.lesson-share-toast{
+  min-height:20px;
+  flex-basis:100%;
+  color:#657d95;
+  font-size:13px;
+  font-weight:700;
+}
+@media(max-width:680px){
+  .lesson-share-tools{padding:12px;gap:8px}
+  .lesson-share-tools .share-tools-title{width:100%;margin-right:0}
+  .lesson-share-btn{flex:1 1 calc(50% - 8px)}
+}
+@media print{
+  .lesson-share-tools{display:none!important}
+}
+
+
+/* v11 scoped student links */
+.module-share-tools{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  margin:0 0 18px;padding:12px 14px;background:#fff;border:1px solid #d8e5f1;
+  border-radius:16px;box-shadow:0 8px 22px rgba(76,105,141,.06)
+}
+.module-share-hint{color:#6b8197;font-size:13px;font-weight:700}
+body.student-task-mode .teacher-link-action,
+body.student-task-mode .teacher-only-tools,
+body.student-module-mode .teacher-link-action,
+body.student-module-mode .teacher-only-tools{display:none!important}
+body.student-task-mode .lesson-nav{display:none!important}
+[hidden]{display:none!important}
+@media(max-width:680px){.module-share-tools{align-items:stretch}.module-share-hint{width:100%}}
