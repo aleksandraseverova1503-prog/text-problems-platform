@@ -26,31 +26,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Rebuild v12
+      - name: Mirror current platform
         run: |
-          cat \
-            bundle/part00.txt \
-            bundle/part01.txt \
-            bundle/part02.txt \
-            bundle/part03.txt \
-            bundle/part04.txt \
-            bundle/part05.txt \
-            bundle/part06.txt \
-            bundle/part07_08.txt \
-            bundle/part09_10.txt \
-            bundle/part11_12.txt \
-            bundle/part13_14.txt \
-            bundle/part15_16.txt \
-            bundle/part17.txt \
-            > /tmp/v12.b64
-          base64 -d /tmp/v12.b64 > /tmp/v12.zip
-          mkdir -p /tmp/unpack _site
-          unzip -q /tmp/v12.zip -d /tmp/unpack
-          cp -a /tmp/unpack/text-problems-platform-full-v12/. _site/
-          touch _site/.nojekyll
-          test -f _site/index.html
-          test -f _site/modules/movement/index.html
-          test -f _site/shared/lesson-tools.js
+          mkdir -p _site
+          cd _site
+          wget --mirror --convert-links --adjust-extension --page-requisites --no-parent \
+            --directory-prefix=. \
+            https://6a9e48175056d37da36b8611--alex-math-text-problems.netlify.app/
+          if [ -d 6a9e48175056d37da36b8611--alex-math-text-problems.netlify.app ]; then
+            cp -a 6a9e48175056d37da36b8611--alex-math-text-problems.netlify.app/. .
+            rm -rf 6a9e48175056d37da36b8611--alex-math-text-problems.netlify.app
+          fi
+          touch .nojekyll
+          test -f index.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
