@@ -1,0 +1,50 @@
+name: Deploy mirror to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Mirror current platform
+        run: |
+          mkdir -p _site
+          cd _site
+          wget --mirror --convert-links --adjust-extension --page-requisites --no-parent \
+            --directory-prefix=. \
+            https://alex-math-text-problems.netlify.app/
+          if [ -d alex-math-text-problems.netlify.app ]; then
+            cp -a alex-math-text-problems.netlify.app/. .
+            rm -rf alex-math-text-problems.netlify.app
+          fi
+          touch .nojekyll
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
