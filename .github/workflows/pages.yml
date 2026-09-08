@@ -1,6 +1,10 @@
 name: Deploy platform to GitHub Pages
 
 on:
+  push:
+    branches: ["main"]
+    paths:
+      - ".github/workflows/pages.yml"
   workflow_dispatch:
 
 permissions:
@@ -8,8 +12,54 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
 jobs:
   deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Bundle upload in progress"
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Rebuild v12
+        run: |
+          cat \
+            bundle/part00.txt \
+            bundle/part01.txt \
+            bundle/part02.txt \
+            bundle/part03.txt \
+            bundle/part04.txt \
+            bundle/part05.txt \
+            bundle/part06.txt \
+            bundle/part07_08.txt \
+            bundle/part09_10.txt \
+            bundle/part11_12.txt \
+            bundle/part13_14.txt \
+            bundle/part15_16.txt \
+            bundle/part17.txt \
+            > /tmp/v12.b64
+          base64 -d /tmp/v12.b64 > /tmp/v12.zip
+          mkdir -p /tmp/unpack _site
+          unzip -q /tmp/v12.zip -d /tmp/unpack
+          cp -a /tmp/unpack/text-problems-platform-full-v12/. _site/
+          touch _site/.nojekyll
+          test -f _site/index.html
+          test -f _site/modules/movement/index.html
+          test -f _site/shared/lesson-tools.js
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
